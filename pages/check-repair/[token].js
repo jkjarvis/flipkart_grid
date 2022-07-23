@@ -1,6 +1,5 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
 
@@ -9,12 +8,14 @@ import Warranty from "../../artifacts/contracts/WarrantyNFT.sol/Warranty.json";
 
 export default function MakeRepair() {
   const [repairs, setRepairs] = useState([]);
+
   const [loadingState, setLoadingState] = useState("not-loaded");
   const router = useRouter();
   const { token } = router.query;
+  const [tokenId, setToken] = useState(token);
 
   useEffect(() => {
-    loadRepairs(token);
+    loadRepairs(tokenId);
   });
 
   async function loadRepairs(token) {

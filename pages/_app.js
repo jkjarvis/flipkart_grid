@@ -17,6 +17,9 @@ function MyApp({ Component, pageProps }) {
           <Link href="/make-repair">
             <a className="mr-6 text-pink-500">Make Repair</a>
           </Link>
+          <Link href="/create-minter">
+            <a className="mr-6 text-pink-500">Create Minter</a>
+          </Link>
           <Link href="/my-nfts">
             <a className="mr-6 text-pink-500">My NFTs</a>
           </Link>

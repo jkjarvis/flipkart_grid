@@ -38,7 +38,7 @@ export default function CreateMinter() {
           placeholder="Serial Number"
           className="mt-8 border rounded p-4"
           onChange={(e) =>
-            updateFormInput({ ...formInput, customerAddress: e.target.value })
+            updateFormInput({ ...formInput, minterAddress: e.target.value })
           }
         />
         <button

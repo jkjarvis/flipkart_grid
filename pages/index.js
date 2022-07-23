@@ -18,7 +18,9 @@ export default function Home() {
     4: "NA",
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    checkRole();
+  }, []);
 
   async function checkRole() {
     const web3Modal = new Web3Modal();
@@ -31,16 +33,16 @@ export default function Home() {
       provider
     );
 
-    const role = await warrantyContract.checkRole();
-    console.log(role);
-    setRole(role);
+    const haveRole = await warrantyContract.checkRole();
+    console.log(haveRole);
+    setRole(haveRole);
     setLoadingState("loaded");
   }
 
-  if (getRole[role] == "NA")
+  if (loadingState == "not-loaded" && getRole[role] == "NA")
     return (
       <div className="center">
-        <button onClick={() => checkRole()}>CONNECT</button>
+        <button onClick={checkRole}>CONNECT</button>
       </div>
     );
 
