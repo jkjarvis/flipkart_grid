@@ -5,6 +5,8 @@ import Web3Modal from "web3modal";
 
 import { contractAddress } from "../config";
 
+import styles from '../styles/MakeRepair.module.scss';
+
 import Warrenty from "../artifacts/contracts/WarrantyNFT.sol/Warranty.json";
 
 export default function MakeRepair() {
@@ -32,29 +34,25 @@ export default function MakeRepair() {
   }
 
   return (
-    <div className="flex justify-center">
-      <div className="w-1/2 flex flex-col pb-12">
+    <div className={styles.container}>
         <input
           placeholder="Serial Number"
-          className="mt-8 border rounded p-4"
           onChange={(e) =>
             updateFormInput({ ...formInput, serialNumber: e.target.value })
           }
         />
-        <input
+        <textarea
           placeholder="Description"
-          className="mt-8 border rounded p-4"
           onChange={(e) =>
             updateFormInput({ ...formInput, description: e.target.value })
           }
         />
         <button
           onClick={makeRepair}
-          className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg"
+          className={styles.mintButton}
         >
           Make Repair
         </button>
-      </div>
     </div>
   );
 }

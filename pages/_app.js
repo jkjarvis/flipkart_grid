@@ -1,34 +1,55 @@
-/* pages/_app.js */
-import "../styles/globals.css";
+import { ethers } from "ethers";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import axios from "axios";
+import Web3Modal from "web3modal";
+
+import { contractAddress } from "../config";
+
+import Warrenty from "../artifacts/contracts/WarrantyNFT.sol/Warranty.json";
+
+import '../styles/globalStyles.scss'
+
+import Navbar from "../components/Navbar/Navbar";
 
 function MyApp({ Component, pageProps }) {
+  const [role, setRole] = useState(4);
+  const [loadingState, setLoadingState] = useState("not-loaded");
+  const [connected, setConnectedState] = useState("NA");
+
+  const getRole = {
+    0: "USER",
+    1: "MINTER",
+    2: "ADMIN",
+    4: "NA",
+  };
+
+  async function connect() {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+
+    const warrantyContract = new ethers.Contract(
+      contractAddress,
+      Warrenty.abi,
+      provider
+    );
+
+    const haveRole = await warrantyContract.checkRole();
+    console.log(haveRole);
+    setRole(haveRole);
+    setLoadingState("loaded");
+    setConnectedState(getRole[role]);
+  }
+
   return (
     <div>
-      <nav className="border-b p-6">
-        <p className="text-4xl font-bold">Grid-Warranty NFT</p>
-        <div className="flex mt-4">
-          <Link href="/">
-            <a className="mr-4 text-pink-500">Home</a>
-          </Link>
-          <Link href="/create-product">
-            <a className="mr-6 text-pink-500">Mint Token</a>
-          </Link>
-          <Link href="/make-repair">
-            <a className="mr-6 text-pink-500">Make Repair</a>
-          </Link>
-          <Link href="/create-minter">
-            <a className="mr-6 text-pink-500">Create Minter</a>
-          </Link>
-          <Link href="/my-nfts">
-            <a className="mr-6 text-pink-500">My NFTs</a>
-          </Link>
-          <Link href="/dashboard">
-            <a className="mr-6 text-pink-500">Dashboard</a>
-          </Link>
-        </div>
-      </nav>
-      <Component {...pageProps} />
+      <Navbar connected={connected} connect={connect}/>
+      <Component 
+        {...pageProps} 
+        connect={connect}
+        connected={connected}
+      />
     </div>
   );
 }

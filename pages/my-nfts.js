@@ -5,6 +5,8 @@ import Web3Modal from "web3modal";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
+import styles from "../styles/MyNfts.module.scss";
+
 import { contractAddress } from "../config";
 import Warranty from "../artifacts/contracts/WarrantyNFT.sol/Warranty.json";
 
@@ -54,37 +56,34 @@ export default function MyNFTs() {
   }
 
   if (loadingState === "loaded" && !nfts.length)
-    return <h1 className="py-10 px-20 text-3xl">No NFTs owned</h1>;
+    return <h1 className={styles.noNft}>No NFTs owned</h1>;
   return (
-    <div className="flex justify-center">
-      <div className="p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-          {nfts.map((nft, i) => (
-            <div key={i} className="border shadow rounded-xl overflow-hidden">
-              <img src={nft.image} className="rounded" />
-              <div className="p-4 bg-black">
-                <p className="text-2xl font-bold text-white">
-                  Name - {nft.name}
-                </p>
-                <p className="text-2xl font-bold text-white">
-                  Serial Number - {nft.serialNumber}
-                </p>
-                <p className="text-2xl font-bold text-white">
-                  Owner - {nft.owner}
-                </p>
-                <p className="text-2xl font-bold text-white">
-                  Warranty Expiry - {nft.warrantyExpiry}
-                </p>
-                <Link href={`/check-repair/${JSON.stringify(nft.tokenId)}`}>
-                  <button className="mt-4 w-full bg-pink-500 text-white font-bold py-2 px-12 rounded">
-                    Check Repairs
-                  </button>
-                </Link>
-              </div>
+    <div className={styles.nftContainer}>
+      {nfts.map((nft, i) => (
+        <div key={i} className={styles.nftCard}>
+          <div
+            className={styles.nft}
+            style={{ backgroundImage: `url(` + nft.image + `)` }}
+          >
+            <p className={styles.name}>{nft.name}</p>
+
+            <div className={styles.details}>
+              <p>
+                <b>Serial No:</b> {nft.serialNumber}
+              </p>
+              <p>
+                <b>Expiry:</b> {nft.warrantyExpiry}
+              </p>
             </div>
-          ))}
+          </div>
+          <Link href={`/check-repair/${JSON.stringify(nft.tokenId)}`}>
+            <button className={styles.nftRepair}>Check Repairs</button>
+          </Link>
+          <Link href={`/resell/${JSON.stringify(nft.tokenId)}`}>
+            <button className={styles.nftRepair}>Resell</button>
+          </Link>
         </div>
-      </div>
+      ))}
     </div>
   );
 }

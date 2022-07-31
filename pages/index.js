@@ -1,54 +1,83 @@
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Web3Modal from "web3modal";
+import { useState, useEffect } from "react";
 
-import { contractAddress } from "../config";
+import Image from "next/image";
 
-import Warrenty from "../artifacts/contracts/WarrantyNFT.sol/Warranty.json";
+import styles from "../styles/Home.module.scss";
 
-export default function Home() {
-  const [role, setRole] = useState(4);
-  const [loadingState, setLoadingState] = useState("not-loaded");
+import introImage from "../assets/images/introImg2.svg";
 
-  const getRole = {
-    0: "USER",
-    1: "MINTER",
-    2: "ADMIN",
-    4: "NA",
-  };
+export default function Home({ connect, checkRole }) {
+  const [loopNum, setLoopNum] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [text, setText] = useState("");
+  const [delta, setDelta] = useState(300 - Math.random() * 100);
+  const [index, setIndex] = useState(1);
+  const toRotate = ["4.0", "Warranty Systems using NFTs"];
+  const period = 2000;
 
   useEffect(() => {
-    checkRole();
-  }, []);
+    let ticker = setInterval(() => {
+      tick();
+    }, delta);
 
-  async function checkRole() {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
+    return () => {
+      clearInterval(ticker);
+    };
+  }, [text]);
 
-    const warrantyContract = new ethers.Contract(
-      contractAddress,
-      Warrenty.abi,
-      provider
-    );
+  const tick = () => {
+    let i = loopNum % toRotate.length;
+    let fullText = toRotate[i];
+    let updatedText = isDeleting
+      ? fullText.substring(0, text.length - 1)
+      : fullText.substring(0, text.length + 1);
 
-    const haveRole = await warrantyContract.checkRole();
-    console.log(haveRole);
-    setRole(haveRole);
-    setLoadingState("loaded");
-  }
+    setText(updatedText);
 
-  if (loadingState == "not-loaded" && getRole[role] == "NA")
-    return (
-      <div className="center">
-        <button onClick={checkRole}>CONNECT</button>
-      </div>
-    );
+    if (isDeleting) {
+      setDelta((prevDelta) => prevDelta / 2);
+    }
+
+    if (!isDeleting && updatedText === fullText) {
+      setIsDeleting(true);
+      setIndex((prevIndex) => prevIndex - 1);
+      setDelta(period);
+    } else if (isDeleting && updatedText === "") {
+      setIsDeleting(false);
+      setLoopNum(loopNum + 1);
+      setIndex(1);
+      setDelta(500);
+    } else {
+      setIndex((prevIndex) => prevIndex + 1);
+    }
+  };
 
   return (
-    <div>
-      <h1>{getRole[role]}</h1>
+    <div className={styles.homeLogin}>
+      {/* <div className={styles.intro}>
+        <h1>Web3</h1>
+        <h2>Warranties</h2>
+      </div> */}
+
+      <div className={styles.introAnim}>
+        <h1>
+          {`Flipkart GRID |`}{" "}
+          <span
+            className={styles.textRotate}
+            dataPeriod="1000"
+            data-rotate='[ "4.0", "Warranty System using NFTs"]'
+          >
+            <span className={styles.wrap}>{text}</span>
+          </span>
+        </h1>
+        <p>
+          Introducing the all new NFT based Warranties. Forget about worrying
+          where your warranty cards are and just with a click of a button, prove
+          your ownership for your products.
+        </p>
+      </div>
+
+      <Image className={styles.introImg} src={introImage} />
     </div>
   );
 }

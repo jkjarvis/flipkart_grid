@@ -6,6 +6,8 @@ import Web3Modal from "web3modal";
 
 import { contractAddress } from "../config";
 
+import styles from '../styles/CreateMinter.module.scss';
+
 import Warrenty from "../artifacts/contracts/WarrantyNFT.sol/Warranty.json";
 
 export default function CreateMinter() {
@@ -32,8 +34,7 @@ export default function CreateMinter() {
   }
 
   return (
-    <div className="flex justify-center">
-      <div className="w-1/2 flex flex-col pb-12">
+    <div className={styles.container}>
         <input
           placeholder="Serial Number"
           className="mt-8 border rounded p-4"
@@ -43,11 +44,10 @@ export default function CreateMinter() {
         />
         <button
           onClick={createMinter}
-          className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg"
+          className={styles.mintButton}
         >
           Create Minter
         </button>
-      </div>
     </div>
   );
 }

@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import { contractAddress } from "../../config";
 import Warranty from "../../artifacts/contracts/WarrantyNFT.sol/Warranty.json";
 
+import styles from "../../styles/MyNfts.module.scss";
+
 export default function MakeRepair() {
   const [repairs, setRepairs] = useState([]);
 
@@ -31,7 +33,7 @@ export default function MakeRepair() {
     );
     console.log("token: ", token);
     const data = await warrantyContract
-      .checkRepairs(0)
+      .checkRepairs(token)
       .catch((e) => console.log(e));
     console.log("data: ", data);
     const repairs = await Promise.all(
@@ -50,22 +52,16 @@ export default function MakeRepair() {
   }
 
   if (loadingState === "loaded" && !repairs.length)
-    return <h1 className="py-10 px-20 text-3xl">No Repairs done yet!</h1>;
+    return <h1 className={styles.noNft}>No Repairs done yet!</h1>;
 
   return (
-    <div className="flex justify-center">
+    <div className={styles.repairContainer}>
       <div className="p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
           {repairs.map((repair, i) => (
-            <div key={i} className="border shadow rounded-xl overflow-hidden">
-              <div className="p-4 bg-black">
-                <p className="text-2xl font-bold text-white">
-                  Date - {repair.date}
-                </p>
-                <p className="text-2xl font-bold text-white">
-                  Description - {repair.description}
-                </p>
-              </div>
+            <div key={i} className={styles.repair}>
+              <p>Date - {repair.date}</p>
+              <p>Description - {repair.description}</p>
             </div>
           ))}
         </div>
