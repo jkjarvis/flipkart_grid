@@ -21,6 +21,7 @@ export default function CreateProduct() {
     description: "",
     warrantyDays: "",
     customerAddress: "",
+    customerEmail: "",
   });
   const router = useRouter();
 
@@ -86,6 +87,16 @@ export default function CreateProduct() {
       )
       .catch((e) => alert(e));
     await transaction.wait();
+
+    axios
+      .post("http://localhost:3000/api/send-email", {
+        email: formInput.customerEmail,
+        url: url,
+      })
+      .then((res) => {
+        setEmail("");
+      })
+      .catch((e) => console.log(e));
 
     router.push("/");
   }

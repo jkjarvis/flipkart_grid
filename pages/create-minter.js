@@ -6,7 +6,7 @@ import Web3Modal from "web3modal";
 
 import { contractAddress } from "../config";
 
-import styles from '../styles/CreateMinter.module.scss';
+import styles from "../styles/CreateMinter.module.scss";
 
 import Warrenty from "../artifacts/contracts/WarrantyNFT.sol/Warranty.json";
 
@@ -35,19 +35,16 @@ export default function CreateMinter() {
 
   return (
     <div className={styles.container}>
-        <input
-          placeholder="Serial Number"
-          className="mt-8 border rounded p-4"
-          onChange={(e) =>
-            updateFormInput({ ...formInput, minterAddress: e.target.value })
-          }
-        />
-        <button
-          onClick={createMinter}
-          className={styles.mintButton}
-        >
-          Create Minter
-        </button>
+      <input
+        placeholder="Minter Wallet Address"
+        className="mt-8 border rounded p-4"
+        onChange={(e) =>
+          updateFormInput({ ...formInput, minterAddress: e.target.value })
+        }
+      />
+      <button onClick={createMinter} className={styles.mintButton}>
+        Create Minter
+      </button>
     </div>
   );
 }

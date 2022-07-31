@@ -142,7 +142,7 @@ contract Warranty is ERC721, ERC721URIStorage, ERC721Burnable, AccessControl {
 
     }
 
-    function fetchMyNFTs()public view returns (Product[] memory){
+    function fetchMyNFTs()public  returns (Product[] memory){
         uint totalProducts = _tokenIdCounter.current();
         uint productCount = 0;
         uint currentIndex = 0;
@@ -159,6 +159,11 @@ contract Warranty is ERC721, ERC721URIStorage, ERC721Burnable, AccessControl {
         if (idToProduct[i].owner == msg.sender) {
                 uint currentId = i;
                 Product storage currentProduct = idToProduct[currentId];
+
+                if(currentProduct.warrantyExpiry < block.timestamp){
+                    _burn(currentProduct.tokenId);
+                    continue;
+                }
                 products[currentIndex] = currentProduct;
                 currentIndex += 1;
         }
